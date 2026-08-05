@@ -49,5 +49,3 @@ def parse_fastq(file_path: str) -> Generator[FastqRecord, None, None]:
             description=description,
             quality_str=quality_str
         )
-
-    
