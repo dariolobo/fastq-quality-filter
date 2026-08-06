@@ -28,7 +28,7 @@ def calculate_n_content(sequence: str) -> float:
 def summarize_fastq_metrics(records) -> Dict[str, float]:
     """
     Compute aggregate metrics across all FastqRecord objects.
-    Note: 'records' is expected to be an iterable/generator of FasqRecord.
+    Note: 'records' is expected to be an iterable/generator of FastqRecord.
     """
     total_reads = 0
     total_bases = 0
