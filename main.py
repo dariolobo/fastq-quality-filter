@@ -13,10 +13,10 @@ def main():
 
     print(f"Processing input file {input_file}...")
 
-    # 1. Parse raw records into a list to allow multiple passes
+    # 1. Parse raw FASTQ records into a list
     raw_records = list(parse_fastq(input_file))
 
-    # 2. Calculate and display initial metrics (uses Line 4 import)
+    # 2. Calculate and display initial metrics
     initial_metrics = summarize_fastq_metrics(raw_records)
     print(f"Initial Metrics: {initial_metrics}")
 
