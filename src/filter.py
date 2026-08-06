@@ -37,7 +37,7 @@ def filter_fastq_records(
     max_n_pct: float = 5.0
 ) -> Generator[FastqRecord, None, None]:
     """
-    Yield only the FastqRecord objects that pass quality tresholds.
+    Yield only the FastqRecord objects that pass quality thresholds.
     """
     for record in records:
         if is_high_quality_read(
