@@ -1,82 +1,200 @@
-# FASTQ Quality Trimmer 🧬
+# FASTQ Quality Assessment & Filtering 🧬
 
-A Python-based tool for the quality control, processing, and filtering of next-generation sequencing (NGS) data in FASTQ format.
+A lightweight Python tool for FASTQ quality assessment and read filtering in next-generation sequencing (NGS) workflows.
 
-## 🚀 Overview and Key Features
+---
 
-This tool cleans and prepares raw sequencing data before proceeding with assembly or alignment tasks. Its features include:
+## 🧬 Project Overview & Biological Context
 
-* **Sliding-window trimming:** Evaluates the average base quality across sliding windows along the read, trimming low-quality regions.
-* **Phred score analysis:** Accurate parsing of sequence qualities to ensure the retention of biologically reliable data.
-* **Minimum length filtering:** Discards reads that fall below a useful length threshold after the trimming process.
-* **Ambiguous base control:** Excludes sequences containing a high number of uncalled nucleotides (`N`).
+Raw sequencing reads can contain low-quality bases, short reads, and ambiguous nucleotide calls that may affect downstream bioinformatics analyses.
+
+**FASTQ Quality Assessment & Filtering** provides a simple preprocessing workflow to assess sequencing quality and filter reads based on predefined quality criteria.
+
+The pipeline:
+
+1. Parses FASTQ sequencing records.
+2. Calculates initial quality metrics.
+3. Evaluates individual reads against predefined quality thresholds.
+4. Filters reads that do not meet the required criteria.
+5. Writes retained reads to a compressed FASTQ output file.
+
+---
 
 ## ⚙️ Pipeline Architecture
 
-The tool processes sequencing data through a streamlined, sequential pipeline:
+The workflow is organized into modular processing steps:
 
-1. **Data Ingestion:** Reads the raw FASTQ file iteratively (optimizing memory usage) using Biopython.
-2. **Quality Assessment:** Applies a sliding window across each sequence to calculate the average Phred quality score.
-3. **Trimming:** Trims the ends of the read when the window's average quality drops below the user-defined threshold.
-4. **Length Validation:** Discards the trimmed read if its new length is strictly shorter than the minimum specified length.
-5. **Ambiguous Base Check:** Filters out sequences exceeding the allowed limit of ambiguous `N` calls.
-6. **Output Generation:** Writes the surviving, high-quality sequences into a new FASTQ file ready for downstream analysis.
+```
+ Raw FASTQ File
+        │
+        ▼
+ FASTQ Record Parsing
+        │
+        ▼
+ Quality Metrics Calculation
+        │
+        ▼
+ Read-Level Quality Filtering
+        │
+        ├── Mean Phred Quality ≥ 20.0
+        ├── Read Length ≥ 50 bp
+        └── N Content ≤ 5.0%
+        │
+        ▼
+ Filtered FASTQ Output
+```
 
-## 📋 Prerequisites
+### Processing Steps
 
-To run this tool, you need Python 3.8 or higher. The **Biopython** library is highly recommended, as it facilitates the efficient parsing, manipulation, and analysis of biological formats like FASTQ.
+* **FASTQ Parsing:** Reads sequencing records and extracts sequence and quality information.
+* **Quality Assessment:** Calculates summary metrics including total reads, total bases, mean read length, GC content, N content, and mean Phred quality.
+* **Read-Level Filtering:** Evaluates individual reads according to predefined quality thresholds.
+* **Quality Filtering:** Excludes reads with a mean Phred quality below the required threshold.
+* **Length Filtering:** Excludes reads shorter than the minimum required length.
+* **Ambiguous Base Filtering:** Excludes reads exceeding the maximum allowed percentage of ambiguous `N` bases.
+* **Output Generation:** Writes retained reads to a compressed FASTQ file.
 
-## 🛠️ Installation
+---
 
-1. Clone this repository to your local environment:
-   `git clone https://github.com/dariolobo/fastq-quality-trimmer.git`
-   `cd fastq-quality-trimmer`
+## 🔬 Bioinformatics Applications
 
-2. Install Biopython using pip:
+Quality-filtered FASTQ reads can be used as input for downstream NGS workflows, including:
+
+* Sequence alignment and mapping.
+* Genome assembly.
+* Variant calling.
+* Microbial genomics.
+* Viral genome analysis.
+* Comparative sequence analysis.
+
+The tool is intended as an early preprocessing component within larger bioinformatics workflows.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Python 3
+* Biopython
+
+### Installation
+
+1. Clone the repository:
+
+   `git clone https://github.com/dariolobo/fastq-quality-filter.git`
+
+   `cd fastq-quality-filter`
+
+2. Install the required dependency:
+
    `pip install biopython`
+
+---
 
 ## 💻 Usage
 
-The project follows a modular design, but execution is centralized through `main.py`. Running this main file automatically initializes and invokes all the necessary filtering, trimming, and validation modules.
+The workflow is executed through `main.py` using the sample FASTQ dataset included in the repository.
 
-Run the tool from your terminal by providing the desired parameters:
+Run the tool from the project root:
 
-`python main.py -i input.fastq -o output.fastq -w 4 -q 20 -l 35`
+```
+ python main.py
+```
 
-### Arguments and Parameters:
-* `-i` / `--input`: Path to the input raw FASTQ file.
-* `-o` / `--output`: Path and filename for the cleaned output FASTQ file.
-* `-w` / `--window`: Size of the sliding window to evaluate quality.
-* `-q` / `--quality`: Minimum acceptable Phred score within the window.
-* `-l` / `--min_length`: Minimum length required to keep a read after trimming.
+The default workflow reads:
+
+```
+ data/sample.fastq
+```
+
+and generates:
+
+```
+ data/sample_filtered.fastq.gz
+```
+
+### Filtering Criteria
+
+Each read is evaluated using the following thresholds:
+
+* **Mean Phred quality:** ≥ 20.0
+* **Minimum read length:** ≥ 50 bp
+* **Maximum N content:** ≤ 5.0%
+
+A read must satisfy all three criteria to be retained in the output dataset.
+
+---
 
 ## 📊 Sample Output
 
-When running the tool, the console will provide a concise summary report of the trimming process:
+A typical execution reports the input file, initial FASTQ metrics, and output location:
 
-```text
-[INFO] Starting FASTQ Quality Trimmer...
-[INFO] Input file: input.fastq
-[INFO] Processing reads...
-
-======================================
-         TRIMMING SUMMARY
-======================================
-Total reads processed:      100,000
-Reads passing filters:       86,450 (86.45%)
-Reads dropped (quality):      9,300 (9.30%)
-Reads dropped (length):       3,500 (3.50%)
-Reads dropped (N-content):      750 (0.75%)
-======================================
-
-[INFO] Clean data saved to: output.fastq
-[INFO] Process completed successfully in 12.4 seconds.
 ```
+ Processing input file data/sample.fastq...
+ Initial Metrics: {...}
+ Filtering complete! Clean file saved to: data/sample_filtered.fastq.gz
+```
+
+The reported metrics depend on the input FASTQ dataset.
+
+---
 
 ## 📁 Project Structure
 
-* `main.py`: The main execution script that coordinates the workflow across all modules.
+```
+ fastq-quality-filter/
+ │
+ ├── data/
+ │   ├── sample.fastq
+ │   └── sample_filtered.fastq.gz
+ │
+ ├── src/
+ │   ├── filter.py
+ │   ├── metrics.py
+ │   ├── parser.py
+ │   └── writer.py
+ │
+ ├── main.py
+ ├── .gitignore
+ └── README.md
+```
 
-## 🤝 Contributing
+### Core Components
 
-If you wish to improve the code or documentation, feel free to fork the repository, open an issue detailing the bug/feature, or submit a pull request.
+* `main.py`: Coordinates the FASTQ quality assessment and filtering workflow.
+* `src/parser.py`: Parses FASTQ records and extracts sequence and quality information.
+* `src/metrics.py`: Calculates summary FASTQ quality metrics.
+* `src/filter.py`: Applies read-level quality, length, and ambiguous-base filtering criteria.
+* `src/writer.py`: Writes retained FASTQ records to the output file.
+
+---
+
+## 🛠️ Built With
+
+* **Python 3** — Core programming language.
+* **Biopython** — FASTQ parsing and sequence-quality handling.
+* **Phred quality scores** — Used for sequencing read quality assessment.
+* **Gzip** — Used for compressed FASTQ output.
+
+---
+
+## 📌 Workflow Position
+
+This tool can be used as an early preprocessing step in an NGS workflow:
+
+```
+ Raw FASTQ Data
+        │
+        ▼
+ Quality Assessment & Filtering
+        │
+        ▼
+ Quality-Filtered Reads
+        │
+        ├──────────────► Alignment
+        │
+        ├──────────────► Genome Assembly
+        │
+        └──────────────► Variant Analysis
+```
