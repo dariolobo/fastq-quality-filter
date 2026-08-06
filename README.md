@@ -1,81 +1,82 @@
-# 🧬 FASTQ Quality Trimmer
+# FASTQ Quality Trimmer 🧬
 
-A lightweight, pure-Python command-line tool designed to parse, evaluate quality metrics, and filter high-throughput sequencing data in FASTQ format (supporting both raw `.fastq` and compressed `.fastq.gz` input/output).
+A Python-based tool for the quality control, processing, and filtering of next-generation sequencing (NGS) data in FASTQ format.
 
----
+## 🚀 Overview and Key Features
 
-## 📌 Table of Contents
-- [Features](#-features)
-- [Project Structure](#-project-structure)
-- [Prerequisites & Installation](#-prerequisites--installation)
-- [Usage](#-usage)
-- [Pipeline Architecture](#-pipeline-architecture)
-- [Sample Output](#-sample-output)
+This tool cleans and prepares raw sequencing data before proceeding with assembly or alignment tasks. Its features include:
 
----
+* **Sliding-window trimming:** Evaluates the average base quality across sliding windows along the read, trimming low-quality regions.
+* **Phred score analysis:** Accurate parsing of sequence qualities to ensure the retention of biologically reliable data.
+* **Minimum length filtering:** Discards reads that fall below a useful length threshold after the trimming process.
+* **Ambiguous base control:** Excludes sequences containing a high number of uncalled nucleotides (`N`).
 
-## ✨ Features
-* ⚙️ **Format Flexibility:** Seamlessly handles uncompressed (`.fastq`) and Gzip-compressed (`.fastq.gz`) sequence files.
-* 🎯 **Custom Quality Thresholds:** Filters reads based on:
-  * Minimum average Phred quality score (`min_mean_q`).
-  * Minimum sequence length (`min_length`).
-  * Maximum allowable percentage of ambiguous bases (`max_n_pct`).
-* 📊 **Comprehensive Summary Metrics:** Calculates key sequencing metrics (total reads, total base count, mean read length, GC content percentage, N content percentage, and mean Phred score).
-* ⚡ **Zero External Dependencies:** Built entirely with standard Python libraries.
+## ⚙️ Pipeline Architecture
 
----
+The tool processes sequencing data through a streamlined, sequential pipeline:
+
+1. **Data Ingestion:** Reads the raw FASTQ file iteratively (optimizing memory usage) using Biopython.
+2. **Quality Assessment:** Applies a sliding window across each sequence to calculate the average Phred quality score.
+3. **Trimming:** Trims the ends of the read when the window's average quality drops below the user-defined threshold.
+4. **Length Validation:** Discards the trimmed read if its new length is strictly shorter than the minimum specified length.
+5. **Ambiguous Base Check:** Filters out sequences exceeding the allowed limit of ambiguous `N` calls.
+6. **Output Generation:** Writes the surviving, high-quality sequences into a new FASTQ file ready for downstream analysis.
+
+## 📋 Prerequisites
+
+To run this tool, you need Python 3.8 or higher. The **Biopython** library is highly recommended, as it facilitates the efficient parsing, manipulation, and analysis of biological formats like FASTQ.
+
+## 🛠️ Installation
+
+1. Clone this repository to your local environment:
+   `git clone https://github.com/dariolobo/fastq-quality-trimmer.git`
+   `cd fastq-quality-trimmer`
+
+2. Install Biopython using pip:
+   `pip install biopython`
+
+## 💻 Usage
+
+The project follows a modular design, but execution is centralized through `main.py`. Running this main file automatically initializes and invokes all the necessary filtering, trimming, and validation modules.
+
+Run the tool from your terminal by providing the desired parameters:
+
+`python main.py -i input.fastq -o output.fastq -w 4 -q 20 -l 35`
+
+### Arguments and Parameters:
+* `-i` / `--input`: Path to the input raw FASTQ file.
+* `-o` / `--output`: Path and filename for the cleaned output FASTQ file.
+* `-w` / `--window`: Size of the sliding window to evaluate quality.
+* `-q` / `--quality`: Minimum acceptable Phred score within the window.
+* `-l` / `--min_length`: Minimum length required to keep a read after trimming.
+
+## 📊 Sample Output
+
+When running the tool, the console will provide a concise summary report of the trimming process:
+
+```text
+[INFO] Starting FASTQ Quality Trimmer...
+[INFO] Input file: input.fastq
+[INFO] Processing reads...
+
+======================================
+         TRIMMING SUMMARY
+======================================
+Total reads processed:      100,000
+Reads passing filters:       86,450 (86.45%)
+Reads dropped (quality):      9,300 (9.30%)
+Reads dropped (length):       3,500 (3.50%)
+Reads dropped (N-content):      750 (0.75%)
+======================================
+
+[INFO] Clean data saved to: output.fastq
+[INFO] Process completed successfully in 12.4 seconds.
+```
 
 ## 📁 Project Structure
 
-```text
-FASTQ_Quality_Trimmer/
-├── data/
-│   ├── sample.fastq
-│   └── sample_filtered.fastq.gz
-├── src/
-│   ├── filter.py
-│   ├── metrics.py
-│   ├── parser.py
-│   └── writer.py
-├── main.py
-└── README.md
+* `main.py`: The main execution script that coordinates the workflow across all modules.
 
-🚀 Prerequisites & Installation
-Requirements
+## 🤝 Contributing
 
-    🐍 Python 3.10+ (No third-party packages required).
-
-    Setup Instructions
-
-    1. Clone the repository:
-
-    git clone [https://github.com/dariolobo/FASTQ_Quality_Trimmer.git](https://github.com/dariolobo/FASTQ_Quality_Trimmer.git)
-    cd FASTQ_Quality_Trimmer
-
-    2. Activate Virtual Environment (Optional but Recommended):
-    source ~/bio_env/bin/activate
-
-
-💻 Usage
-
-Place your input file inside the data/ directory (or update the path in main.py) and run:
-
-python3 main.py
-
-
-🔄 Pipeline Architecture
-
-    Parse: Reads input FASTQ records sequentially.
-
-    Analyze: Computes and prints baseline metrics of the raw dataset.
-
-    Filter: Evaluates each record against user-defined quality thresholds.
-
-    Export: Writes pass-filter records to a Gzip-compressed FASTQ file (.fastq.gz).
-
-
-📄 Sample Output
-
-Processing input file data/sample.fastq...
-Initial Metrics: {'total_reads': 1000, 'total_bases': 150000, 'mean_read_length': 150.0, 'gc_content_pct': 48.2, 'n_content_pct': 0.05, 'mean_phred_score': 34.1}
-Filtering complete! Clean file saved to: data/sample_filtered.fastq.gz
+If you wish to improve the code or documentation, feel free to fork the repository, open an issue detailing the bug/feature, or submit a pull request.
