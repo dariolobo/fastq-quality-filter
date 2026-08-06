@@ -20,7 +20,7 @@ def main():
     initial_metrics = summarize_fastq_metrics(raw_records)
     print(f"Initial Metrics: {initial_metrics}")
 
-    # 3. Filter high quality records
+    # 3. Filter records based on quality criteria
     filtered_records = filter_fastq_records(
         raw_records,
         min_mean_q=20.0,
