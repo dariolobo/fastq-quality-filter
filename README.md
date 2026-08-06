@@ -99,7 +99,7 @@ The workflow is executed through `main.py` using the sample FASTQ dataset includ
 Run the tool from the project root:
 
 ```
- python main.py
+ python3 main.py
 ```
 
 The default workflow reads:
@@ -177,24 +177,4 @@ The reported metrics depend on the input FASTQ dataset.
 * **Phred quality scores** — Used for sequencing read quality assessment.
 * **Gzip** — Used for compressed FASTQ output.
 
----
-
-## 📌 Workflow Position
-
-This tool can be used as an early preprocessing step in an NGS workflow:
-
-```
- Raw FASTQ Data
-        │
-        ▼
- Quality Assessment & Filtering
-        │
-        ▼
- Quality-Filtered Reads
-        │
-        ├──────────────► Alignment
-        │
-        ├──────────────► Genome Assembly
-        │
-        └──────────────► Variant Analysis
 ```
