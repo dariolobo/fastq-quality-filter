@@ -76,7 +76,6 @@ The tool is intended as an early preprocessing component within larger bioinform
 ### Prerequisites
 
 * Python 3
-* Biopython
 
 ### Installation
 
@@ -85,10 +84,6 @@ The tool is intended as an early preprocessing component within larger bioinform
    `git clone https://github.com/dariolobo/fastq-quality-filter.git`
 
    `cd fastq-quality-filter`
-
-2. Install the required dependency:
-
-   `pip install biopython`
 
 ---
 
@@ -173,7 +168,6 @@ The reported metrics depend on the input FASTQ dataset.
 ## 🛠️ Built With
 
 * **Python 3** — Core programming language.
-* **Biopython** — FASTQ parsing and sequence-quality handling.
 * **Phred quality scores** — Used for sequencing read quality assessment.
 * **Gzip** — Used for compressed FASTQ output.
 
