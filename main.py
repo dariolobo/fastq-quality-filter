@@ -1,5 +1,4 @@
 # main.py
-import sys
 from src.parser import parse_fastq
 from src.metrics import summarize_fastq_metrics
 from src.filter import filter_fastq_records
