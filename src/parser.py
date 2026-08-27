@@ -43,9 +43,9 @@ def parse_fastq(file_path: str) -> Generator[FastqRecord, None, None]:
             if not header.startswith('@') or not description.startswith('+'):
                 raise ValueError(f"Invalid FASTQ record format near line: {header}")
 
-        yield FastqRecord(
-            read_id=header[1:],   # Strip leading '@'
-            sequence=sequence,
-            description=description,
+            yield FastqRecord(
+                read_id=header[1:],   # Strip leading '@'
+                sequence=sequence,
+                description=description,
             quality_str=quality_str
-        )
+            )
