@@ -1,4 +1,4 @@
- # src/parser.py
+# src/parser.py
 import gzip
 from dataclasses import dataclass
 from typing import Generator, List
@@ -47,5 +47,5 @@ def parse_fastq(file_path: str) -> Generator[FastqRecord, None, None]:
                 read_id=header[1:],   # Strip leading '@'
                 sequence=sequence,
                 description=description,
-            quality_str=quality_str
+                quality_str=quality_str
             )
