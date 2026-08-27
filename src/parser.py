@@ -23,7 +23,7 @@ class FastqRecord:
 
 def parse_fastq(file_path: str) -> Generator[FastqRecord, None, None]:
     """
-    Yield FastqRecord objects sequentially form a FASTQ file.
+    Yield FastqRecord objects sequentially from a FASTQ file.
     Supports both uncompressed (.fastq) and gzipped (.fastq.gz) files.
     """
     is_gzipped = file_path.endswith('.gz')
